@@ -1,0 +1,10 @@
+*
+
+#--- Include documentation and git files.
+!.gitignore
+!auteur
+!*.md
+
+#--- Include project files.
+!**/*.c
+!**/*.h
