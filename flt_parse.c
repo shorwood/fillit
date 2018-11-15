@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2018/11/15 04:46:43 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/11/15 07:50:56 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -43,7 +43,7 @@ void	flt_parse_convert(t_flt_tri *tri, const char *str)
 {
 	t_flt_row buf;
 
-	buf = 0ULL;
+	buf = 0;
 	while (*str)
 	{
 		if (*str != '\n')
@@ -93,8 +93,8 @@ void	flt_parse_convert(t_flt_tri *tri, const char *str)
 	else
 		tri->h = 1;
 
-	tri->grid[0] = (buf & 0xf000) << (60 - 12);
-	tri->grid[1] = (buf & 0x0f00) << (60 - 8);
-	tri->grid[2] = (buf & 0x00f0) << (60 - 4);
-	tri->grid[3] = (buf & 0x000f) << (60);
+	tri->grid[0] = (buf & 0xf000) << 48;
+	tri->grid[1] = (buf & 0x0f00) << 52;
+	tri->grid[2] = (buf & 0x00f0) << 56;
+	tri->grid[3] = (buf & 0x000f) << 60;
 }

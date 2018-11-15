@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2018/11/15 02:59:17 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/11/15 10:00:33 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -49,7 +49,9 @@ int			flt_parse_prevalidate(const char *str);
 void		flt_parse_convert(t_flt_tri *tri, const char *str);
 
 void		flt_print_tri(uint16_t *tri);
-void		flt_print_triset_debug(t_flt_tri tri[26], int siz);
+void		flt_print_triset_debug(t_flt_tri *tri, int siz);
+void		flt_print_triset_color(t_flt_tri *tri, int siz);
+void		flt_print_triset_letters(t_flt_tri *tri, int siz);
 
 int			flt_tri_collide(t_flt_tri *tri, t_flt_grid grid, int siz);
 

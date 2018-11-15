@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2018/11/15 05:00:14 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/11/15 10:00:46 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -64,20 +64,6 @@ int			flt_triset_collide(t_flt_tri *tri, int *idx, int siz)
 	}
 	return (1);
 }
-/*
-void		flt_triset_reset(t_flt_tri *tri, t_flt_idx siz)
-{
-	int i;
-
-	i = 0;
-	while (tri->w)
-	{
-		tri->x = i % siz;
-		tri->y = i / siz;
-		tri++;
-	}
-}
-*/
 
 void		flt_triset_reset(t_flt_tri *tri, t_flt_idx siz)
 {
@@ -126,7 +112,7 @@ int			flt_triset_store(t_flt_tri *tri)
 
 void 		flt_tri_push(t_flt_tri *tri, const char *str)
 {
-	if (flt_parse_prevalidate(str))
+	//if (flt_parse_prevalidate(str))
 		flt_parse_convert(tri, str);
 }
 
@@ -155,28 +141,38 @@ void		flt_output_triset(t_flt_tri *tri, int siz)
 ** *****************************************************************************
 */
 
-#define BUFFSIZE 200
+#define BUFFSIZE 50
 
 int			main(int argc, char **argv)
 {
-	t_flt_tri	tri[BUFFSIZE + 10];
+	t_flt_tri	tri[BUFFSIZE + 8];
 
 	argc = 0;
 	argv = NULL;
 
 	int i = 0;
 	while (i < BUFFSIZE)
-		//flt_tri_push(tri + i++, "###.\n#...\n....\n....\n\n");
+	{
+		flt_tri_push(tri + i++, "###.\n#...\n....\n....\n\n");
 		flt_tri_push(tri + i++, "....\n##..\n##..\n....\n\n");
-		/*flt_tri_push(tri + i++, ".#..\n###.\n....\n....\n\n");
-		flt_tri_push(tri + i++, "....\n###.\n.#..\n....\n\n");
-		flt_tri_push(tri + i++, "####\n....\n....\n....\n\n");
-		flt_tri_push(tri + i++, "....\n##..\n.##.\n....\n\n");
-		flt_tri_push(tri + i++, "#...\n#...\n#...\n#...\n\n");
-		flt_tri_push(tri + i++, "....\n#...\n###.\n....\n\n");*/
+		//flt_tri_push(tri + i++, "#...\n###.\n....\n....\n\n");
+		//flt_tri_push(tri + i++, "....\n###.\n..#.\n....\n\n");
+		//flt_tri_push(tri + i++, "####\n....\n....\n....\n\n");
+		//flt_tri_push(tri + i++, "....\n##..\n.##.\n....\n\n");
+		//flt_tri_push(tri + i++, "#...\n#...\n#...\n#...\n\n");
+		//flt_tri_push(tri + i++, "....\n#...\n###.\n....\n\n");
+	}
 
 	int siz = flt_triset_store(tri);
+	flt_print_triset_color(tri, siz);
+	flt_print_triset_letters(tri, siz);
 	flt_print_triset_debug(tri, siz);
 	ft_putnbr(siz);
 	ft_putendl(siz ? " - SOLVED" : " - UNSOLVED");
 }
+
+/*
+####
+####
+
+*/
