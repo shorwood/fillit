@@ -6,173 +6,193 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2018/11/15 10:00:46 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 05:36:05 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-
-/* 
-** *****************************************************************************
-*/
-
-int			flt_tri_collide(t_flt_tri *tri, t_flt_grid grid, int siz)
+void		flt_print_triset_letters(t_lst tris, int siz)
 {
-	uint8_t		yt;
-	uint8_t		ym;
+	char 		*str;
+	size_t		len;
+	int 		x;
+	int 		y;
+	int			i;
+	char		sym;
+	t_tri		*tri;
+	t_lsti		lsti;
 
-	ym = tri->y;
-	yt = 0;
+	len = siz * siz + siz - 1;
+	str = ft_strnew(len);
+	ft_memset(str, '.', len);
 
-	while (yt < 4 /*tri->siz*/ && ym <= siz)
+	i = siz;
+	while(i < siz * siz)
 	{
-		if (grid[ym] & tri->grid[yt] >> tri->x)
-			return (1);
-		grid[ym++] |= tri->grid[yt++] >> tri->x;
-
+		str[i] = '\n';
+		i += siz + 1;
 	}
-	return (0);
+
+	str[len] = '\0';
+
+	sym = '1';
+	lsti = *tris;
+	while (lsti)
+	{
+		tri = lsti->data;
+		y = 0;
+		while (y < 4)
+		{
+			x = 0;
+			while (x < 4)
+			{
+				if (tri->grid[y] >> (63 - x) & 1)
+				{
+					str[(x + tri->x) + (y + tri->y) * (siz + 1)] = sym;
+				}
+				x++;
+			}
+			y++;
+		}
+		sym++;
+		lsti = lsti->next;
+	}
+
+	ft_putstr(str);
+	ft_putendl("\033[0m");
+	free(str);
 }
 
-void		flt_map_wall(t_flt_grid grid, int siz)
+/*
+** *****************************************************************************
+*/
+#define TRI_SQR 	"##..\n##..\n....\n....\n\n"
+#define TRI_LINE	"####\n....\n....\n....\n\n"
+#define TRI_I 		"#...\n#...\n#...\n#...\n\n"
+#define TRI_L 		"#...\n#...\n##..\n....\n\n"
+#define TRI_N	 	".#..\n##..\n#...\n....\n\n"
+#define TRI_S	 	".##.\n##..\n....\n....\n\n"
+
+#define BUFFSIZE 1
+
+int	flt_place(uint64_t grid[64], t_tri *tri, int x, int y)
 {
 	int	i;
 
-	i = 0;
-	grid[i] = ~0ULL >> siz;
-	while (++i < siz)
-		grid[i] = grid[i - 1];
-	while (i < 64)
-		grid[i++] = ~0ULL;
-}
-
-int			flt_triset_collide(t_flt_tri *tri, int *idx, int siz)
-{
-	int i;
-	t_flt_grid grid;
-
-	flt_map_wall(grid, siz);
-
-	i = 0;
-	while (tri->w)
-	{
-		if (flt_tri_collide(tri++, grid, siz))
+	i = -1;
+	while (++i < tri->h)
+		if (grid[y + i] & tri->grid[i] >> x)
 			return (0);
-		*idx = ++i;
-	}
+	i = -1;
+	while (++i < tri->h)
+		grid[y + i] |= tri->grid[i] >> x;
 	return (1);
 }
 
-void		flt_triset_reset(t_flt_tri *tri, t_flt_idx siz)
+/* ************************************************************************** */
+
+int	flt_store2(uint64_t grid[64], t_tri *tri, int siz)
 {
-	int i;
-
-	i = 0;
-	tri->x = 0;
-	tri->y = 0;
-	while ((++tri)->w)
+	int	x;
+	int	y;
+ 
+	y = 0;
+	while (y < siz)
 	{
-		i += (tri - 1)->o;
-		tri->x = i % siz;
-		tri->y = i / siz;
-	}
-}
-
-int			flt_triset_store(t_flt_tri *tri)
-{
-	int	idx;
-	int siz;
-
-	idx = 0;
-	siz = 2;
-	while (siz < 64)
-	{
-		flt_triset_reset(tri, siz);
-		while (tri[idx].y < siz)
+		x = 0;
+		while (x < siz)
 		{
-			tri[idx].x = 0;
-			while (tri[idx].x < siz)
+			if (flt_place(grid, tri, x, y))
 			{
-				if (flt_triset_collide(tri, &idx, siz))
-					return (siz);
-				tri[idx].x++;
+				tri->x = x;
+				tri->y = y;
+				return (1);
 			}
-			tri[idx].y++;
+			x++;
 		}
-		siz++;
+		y++;
 	}
 	return (0);
 }
 
-/*
-** *****************************************************************************
-*/
+/* ************************************************************************** */
 
-void 		flt_tri_push(t_flt_tri *tri, const char *str)
+int	flt_store(t_lst tris, int siz)
 {
-	//if (flt_parse_prevalidate(str))
-		flt_parse_convert(tri, str);
-}
+	t_lsti		lsti;
+	uint64_t	grid[64];
 
+	flt_grid_init(grid, siz);
+	lsti = *tris;
 
-void		flt_output_triset(t_flt_tri *tri, int siz)
-{
-	t_flt_grid grid;
-
-	int i = 0;
-	while (i < siz)
-		grid[i++] = 0;
-
-	i = 0;
-	while (tri[i].w)
-		flt_tri_collide(&tri[i++], grid, siz);
-	
-	i = 0;
-	while (i < siz)
+	while (lsti)
 	{
-		ft_putnbits(&grid[i++], sizeof(*grid), siz);
-		ft_putchar('\n');
+		if (!flt_store2(grid, lsti->data, siz))
+			return (0);
+		lsti = lsti->next;
 	}
+
+	return (1);
 }
 
-/*
-** *****************************************************************************
-*/
+/* ************************************************************************** */
 
-#define BUFFSIZE 50
+#include <math.h>
 
-int			main(int argc, char **argv)
+int	flt_nani(t_lst tris)
 {
-	t_flt_tri	tri[BUFFSIZE + 8];
+	t_lsti	lsti;
+	t_lst	prm;
+	int		siz;
 
+	//--- Get the minimum size of the Grid.
+	//siz = sqrtl(ft_lstlen(tris) * 4);
+	siz = 4;
+
+	while (siz < 16)
+	{
+
+		//--- Generate all permutations.
+		//---prm = ft_lstprm(tris);
+		prm = ft_lstnew(1, tris);
+		lsti = *prm;
+
+		while (lsti)
+		{
+			if(flt_store(lsti->data, siz))
+			{
+				flt_print_triset_letters(tris, siz);
+				return (1);
+			}
+			lsti = lsti->next;
+		}
+		siz++;
+	}
+
+	return (0);
+}
+
+
+/* ************************************************************************** */
+
+int main(int argc, char **argv)
+{
 	argc = 0;
-	argv = NULL;
+	argv = 0;
 
-	int i = 0;
-	while (i < BUFFSIZE)
-	{
-		flt_tri_push(tri + i++, "###.\n#...\n....\n....\n\n");
-		flt_tri_push(tri + i++, "....\n##..\n##..\n....\n\n");
-		//flt_tri_push(tri + i++, "#...\n###.\n....\n....\n\n");
-		//flt_tri_push(tri + i++, "....\n###.\n..#.\n....\n\n");
-		//flt_tri_push(tri + i++, "####\n....\n....\n....\n\n");
-		//flt_tri_push(tri + i++, "....\n##..\n.##.\n....\n\n");
-		//flt_tri_push(tri + i++, "#...\n#...\n#...\n#...\n\n");
-		//flt_tri_push(tri + i++, "....\n#...\n###.\n....\n\n");
-	}
+	t_lst tris = ft_lstnew(9,
+		flt_strtotri(TRI_N),
+		flt_strtotri(TRI_S),
+		flt_strtotri(TRI_L),
+		flt_strtotri(TRI_N),
+		flt_strtotri(TRI_S),
+		flt_strtotri(TRI_L),
+		flt_strtotri(TRI_N),
+		flt_strtotri(TRI_S),
+		flt_strtotri(TRI_L));
 
-	int siz = flt_triset_store(tri);
-	flt_print_triset_color(tri, siz);
-	flt_print_triset_letters(tri, siz);
-	flt_print_triset_debug(tri, siz);
-	ft_putnbr(siz);
-	ft_putendl(siz ? " - SOLVED" : " - UNSOLVED");
+	flt_nani(tris);
+
 }
-
-/*
-####
-####
-
-*/

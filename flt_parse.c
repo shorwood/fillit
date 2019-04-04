@@ -6,23 +6,22 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2018/11/15 07:50:56 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 05:35:34 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-int		flt_parse_prevalidate(const char *str)
+int		flt_prevalidate(const char *str)
 {
-	t_flt_parse_helper n;
+	t_flt_parser n;
 
-	n = (t_flt_parse_helper){0, 0 ,0, 0};
+	n = (t_flt_parser){0, 0 ,0, 0};
 	while (*str)
 	{
 		if (*str == '#')
-{	
-
+		{
 			n.sym = n.dot + n.hsh;
 			n.lnk += (n.sym > 3 && *(str - 5) == '#') +
 					(n.sym > 0 && *(str - 1) == '#') +
@@ -39,11 +38,15 @@ int		flt_parse_prevalidate(const char *str)
 	return (n.dot == 12 && n.hsh == 4 && (n.lnk == 8 || n.lnk == 6));
 }
 
-void	flt_parse_convert(t_flt_tri *tri, const char *str)
+t_tri	*flt_strtotri(const char *str)
 {
-	t_flt_row buf;
+	t_tri 		*tri;
+	uint64_t	buf;
 
+	if(!(tri = (t_tri*)malloc(sizeof(t_tri))))
+		return (NULL);
 	buf = 0;
+
 	while (*str)
 	{
 		if (*str != '\n')
@@ -59,6 +62,7 @@ void	flt_parse_convert(t_flt_tri *tri, const char *str)
 		buf <<= 8;
 	else if (!(buf & 0xf000))
 		buf <<= 4;
+
 	if (!(buf & 0xeeee))
 		buf <<= 3;
 	else if (!(buf & 0xcccc))
@@ -97,4 +101,6 @@ void	flt_parse_convert(t_flt_tri *tri, const char *str)
 	tri->grid[1] = (buf & 0x0f00) << 52;
 	tri->grid[2] = (buf & 0x00f0) << 56;
 	tri->grid[3] = (buf & 0x000f) << 60;
+
+	return (tri);
 }

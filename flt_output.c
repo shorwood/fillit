@@ -6,48 +6,15 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:22:01 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2018/11/15 10:12:00 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 05:29:57 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-void		flt_print_tri(uint16_t *tri)
-{
-	int	i;
-
-	i = 16;
-	while (i--)
-	{
-		ft_putchar(((*tri >> i) & 1) ? '1' : '0');
-		if (i % 4 == 0)
-			ft_putchar('\n');
-	}
-}
-
-void		flt_print_triset_debug(t_flt_tri *tri, int siz)
-{
-	t_flt_grid grid;
-
-	int i = 0;
-	while (i < siz)
-		grid[i++] = 0;
-
-	i = 0;
-	while (tri[i].w)
-		flt_tri_collide(&tri[i++], grid, siz);
-	
-	i = 0;
-	while (i < siz)
-	{
-		ft_putnbits(&grid[i++], sizeof(*grid), siz);
-		ft_putchar('\n');
-	}
-}
-
 #include <stdio.h>
-
+/*
 void		flt_print_triset_color(t_flt_tri *tri, int siz)
 {
 	char 		*str;
@@ -153,3 +120,4 @@ void		flt_print_triset_letters(t_flt_tri *tri, int siz)
 	ft_putendl("\033[0m");
 	free(str);
 }
+*/
