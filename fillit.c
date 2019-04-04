@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 05:36:05 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 06:18:31 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -98,21 +98,17 @@ int	flt_store2(uint64_t grid[64], t_tri *tri, int siz)
 	int	x;
 	int	y;
  
-	y = 0;
-	while (y < siz)
+	y = -1;
+	while (++y < siz)
 	{
-		x = 0;
-		while (x < siz)
-		{
+		x = -1;
+		while (++x < siz)
 			if (flt_place(grid, tri, x, y))
 			{
 				tri->x = x;
 				tri->y = y;
 				return (1);
 			}
-			x++;
-		}
-		y++;
 	}
 	return (0);
 }
@@ -147,25 +143,15 @@ int	flt_nani(t_lst tris)
 	t_lst	prm;
 	int		siz;
 
-	//--- Get the minimum size of the Grid.
-	//siz = sqrtl(ft_lstlen(tris) * 4);
-	siz = 4;
-
+	siz = sqrtl(ft_lstlen(tris) * 4);
 	while (siz < 16)
 	{
-
-		//--- Generate all permutations.
-		//---prm = ft_lstprm(tris);
-		prm = ft_lstnew(1, tris);
+		prm = ft_lstprm(tris);
 		lsti = *prm;
-
 		while (lsti)
 		{
 			if(flt_store(lsti->data, siz))
-			{
 				flt_print_triset_letters(tris, siz);
-				return (1);
-			}
 			lsti = lsti->next;
 		}
 		siz++;
@@ -182,6 +168,7 @@ int main(int argc, char **argv)
 	argc = 0;
 	argv = 0;
 
+	sizeof(t_tri) + sizeof(t_list);
 	t_lst tris = ft_lstnew(9,
 		flt_strtotri(TRI_N),
 		flt_strtotri(TRI_S),
