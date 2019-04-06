@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/03 22:43:09 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/05 11:34:04 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,8 +42,11 @@ typedef struct		s_flt_parser
 t_tri		*flt_strtotri(const char *str);
 int			flt_prevalidate(const char *str);
 
-void	flt_print_tri(t_tri *tri);
-void	flt_print_grid(uint64_t grid[64], int siz);
+int			flt_solve_iterative(t_lst tris);
+int			flt_solve_backtrack(t_lst tris);
 
-void	flt_grid_init(uint64_t grid[64], int siz);
+void		flt_print_tri(t_tri *tri);
+void		flt_print_grid(uint64_t grid[64], int siz);
+void 		flt_print_symbol(t_lst tris, int siz);
+
 #endif

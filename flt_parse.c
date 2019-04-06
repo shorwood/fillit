@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 05:35:34 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/05 12:47:21 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -80,13 +80,13 @@ t_tri	*flt_strtotri(const char *str)
 		tri->w = 1;
 
 	if (buf & 0x1000)
-		tri->o = 4;
-	else if (buf & 0x3000)
 		tri->o = 3;
-	else if (buf & 0x7000)
+	else if (buf & 0x3000)
 		tri->o = 2;
-	else
+	else if (buf & 0x7000)
 		tri->o = 1;
+	else
+		tri->o = 0;
 
 	if (buf & 0x000f)
 		tri->h = 4;
