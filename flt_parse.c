@@ -6,14 +6,20 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/05 12:47:21 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/09 21:58:57 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
+#include <fcntl.h>
+#include "libft.h"
 #include "fillit.h"
 
-int		flt_prevalidate(const char *str)
+/*
+** *****************************************************************************
+*/
+
+static int		validate(const char *str)
 {
 	t_flt_parser n;
 
@@ -38,15 +44,18 @@ int		flt_prevalidate(const char *str)
 	return (n.dot == 12 && n.hsh == 4 && (n.lnk == 8 || n.lnk == 6));
 }
 
-t_tri	*flt_strtotri(const char *str)
+/*
+** *****************************************************************************
+*/
+
+static t_tri	*parse(const char *str)
 {
 	t_tri 		*tri;
-	uint64_t	buf;
+	uint16_t	buf;
 
 	if(!(tri = (t_tri*)malloc(sizeof(t_tri))))
 		return (NULL);
 	buf = 0;
-
 	while (*str)
 	{
 		if (*str != '\n')
@@ -55,39 +64,10 @@ t_tri	*flt_strtotri(const char *str)
 			buf |= 1;
 		str++;
 	}
-
-	if (!(buf & 0xfff0))
-		buf <<= 12;
-	else if (!(buf & 0xff00))
-		buf <<= 8;
-	else if (!(buf & 0xf000))
+	while (!(buf & 0xf000))
 		buf <<= 4;
-
-	if (!(buf & 0xeeee))
-		buf <<= 3;
-	else if (!(buf & 0xcccc))
-		buf <<= 2;
-	else if (!(buf & 0x8888))
+	while (!(buf & 0x8888))
 		buf <<= 1;
-
-	if (buf & 0x1111)
-		tri->w = 4;
-	else if (buf & 0x3333)
-		tri->w = 3;
-	else if (buf & 0x7777)
-		tri->w = 2;
-	else
-		tri->w = 1;
-
-	if (buf & 0x1000)
-		tri->o = 3;
-	else if (buf & 0x3000)
-		tri->o = 2;
-	else if (buf & 0x7000)
-		tri->o = 1;
-	else
-		tri->o = 0;
-
 	if (buf & 0x000f)
 		tri->h = 4;
 	else if (buf & 0x00ff)
@@ -96,11 +76,33 @@ t_tri	*flt_strtotri(const char *str)
 		tri->h = 2;
 	else
 		tri->h = 1;
-
-	tri->grid[0] = (buf & 0xf000) << 48;
-	tri->grid[1] = (buf & 0x0f00) << 52;
-	tri->grid[2] = (buf & 0x00f0) << 56;
-	tri->grid[3] = (buf & 0x000f) << 60;
-
+	tri->grid[0] = (uint64_t)(buf & 0xf000) << 48;
+	tri->grid[1] = (uint64_t)(buf & 0x0f00) << 52;
+	tri->grid[2] = (uint64_t)(buf & 0x00f0) << 56;
+	tri->grid[3] = (uint64_t)(buf & 0x000f) << 60; 
 	return (tri);
+}
+
+/*
+** *****************************************************************************
+*/
+
+t_lst		flt_import(const char *file)
+{
+	int		fd;
+	t_lst	lst;
+	char	buf[22];
+	size_t	len;
+
+	buf[21] = '\0';
+	if (!(lst = ft_lstnew(0)))
+		return (NULL);
+	fd = open(file, O_RDONLY);
+	while ((len = read(fd, buf, 21)) > 0)
+		if (!validate(buf) || !ft_lstpush(lst, parse(buf)))
+		{
+			ft_lstclr(lst, FT_LCLR_ALL);
+			return (NULL);
+		}
+	return (lst);	
 }

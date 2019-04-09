@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   flt_solve_backtrack.c                            .::    .:/ .      .::   */
+/*   flt_solve.c                                      .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/05 15:03:21 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/09 23:02:27 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,7 +18,7 @@
 ** *****************************************************************************
 */
 
-static int	place_tri(uint64_t grid[64], t_tri *tri)
+static int	place(uint64_t grid[64], t_tri *tri)
 {
 	int	i;
 
@@ -36,59 +36,85 @@ static int	place_tri(uint64_t grid[64], t_tri *tri)
 ** *****************************************************************************
 */
 
-int			flt_solve_backtrack2(uint64_t grid[64], t_lsti lsti, int siz)
+static int	unplace(uint64_t grid[64], t_tri *tri)
 {
-	t_tri		*tri;
-	uint64_t	*snap;
+	int	i;
+
+	i = -1;
+	while (++i < tri->h)
+		grid[tri->y + i] ^= tri->grid[i] >> tri->x;
+	return (1);
+}
+
+int tricmp(t_tri *t1, t_tri *t2)
+{
+	int i;
+
+	i = -1;
+	while (t1->grid[i] == t2->grid[i] && i < 4)
+		i++;
+	return (i == 4);
+}
+
+/*
+** *****************************************************************************
+*/
+static t_lst tr;
+
+#include <stdio.h>
+
+static int	insert(uint64_t *grid, t_lsti lsti, int siz, int deep)
+{
+	t_tri	*tri;
+
 		
 	tri = lsti->data;
-	tri->y = 0;
-	while (tri->y < siz)
-	{
-		tri->x = 0;
-		while (tri->x < siz)
+	tri->y = -1;
+	while (++tri->y < siz)
+	{	
+		tri->x = -1;
+		while (++tri->x < siz)
 		{
-			snap = (uint64_t*)malloc(64 * sizeof(uint64_t));
-			ft_memcpy(snap, grid, sizeof(snap));
-			if (place_tri(grid, tri))
-				if (!lsti->next || flt_solve_backtrack2(grid, lsti->next, siz))
+
+				printf("Testing #%d at (x:%d, y:%d)\n", deep, tri->x, tri->y);
+				flt_print(tr, siz);
+			if (place(grid, tri))
+			{
+				if (!lsti->next || !tricmp(tri, (t_tri*)lsti->next->data) || insert(grid, lsti->next, siz, deep + 1))
 					return (1);
-			ft_memcpy(grid, snap, sizeof(snap));
-			free(snap);
-			tri->x++;
+				else
+					unplace(grid, tri);
+			}
 		}
-		tri->y++;
 	}
 	return (0);
 }
 
 /*
 ** *****************************************************************************
-** This algorithm will try all possible orders / permutations of tetrimino and
-** stop as soon as it has found an order that fits into the grid. If it has
-** tried all permutations, it will increase the size of the grid. When the
-** function exits, the tetriminos will have their 'x' and 'y' coordinates set
-** to the last position they were tested on.
-** *****************************************************************************
 */
 
-int			flt_solve_backtrack(t_lst tris)
+
+int			flt_solve(t_lst tris)
 {
 	int			i;
 	int			siz;
 	uint64_t	grid[64];
 
-	siz = 4;//ft_sqrtillu(ft_lstlen(tris) * 4) -1;
-	while (siz < 64)
+	tr = tris;
+
+	if (!tris)
+		return (0);
+	siz = ft_sqrtillu(ft_lstlen(tris) * 4);
+	while (siz < 63)
 	{
 		i = 0;
 		while (i < siz)
 			grid[i++] = (uint64_t)~0 >> siz;
-		while (i < 64)
-			grid[i++] = ~0;
-		if (flt_solve_backtrack2(grid, *tris, siz))
-			return (siz);
+		grid[i] = ~0;
+		if (insert(grid, *tris, siz, 0))
+			break;
 		siz++;
 	}
-	return (0);
+	return (siz);
 }

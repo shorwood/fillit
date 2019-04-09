@@ -6,19 +6,20 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/05 14:55:50 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/09 21:58:55 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "libft.h"
 #include "fillit.h"
 
 /*
 ** *****************************************************************************
 */
 
-static int	place_tri(uint64_t grid[64], t_tri *tri)
+static int	place(uint64_t grid[64], t_tri *tri)
 {
 	int	i;
 
@@ -36,13 +37,13 @@ static int	place_tri(uint64_t grid[64], t_tri *tri)
 ** *****************************************************************************
 */
 
-static int	insert_tri(uint64_t grid[64], t_tri *tri, int siz)
+static int	insert(uint64_t grid[64], t_tri *tri, int siz)
 { 
 	while (tri->y < siz)
 	{
 		while (tri->x < siz)
 		{
-			if (place_tri(grid, tri))
+			if (place(grid, tri))
 				return (1);
 			tri->x++;
 		}
@@ -72,14 +73,13 @@ static int	test_order(t_lst tris, int siz)
 	while (lsti)
 	{
 		((t_tri*)lsti->data)->x = i % siz;
-		((t_tri*)lsti->data)->y = i / siz;
-		i += ((t_tri*)lsti->data)->o;
+		((t_tri*)lsti->data)->y = i++ / siz;
 		lsti = lsti->next;
 	}
 	lsti = *tris;
 	while (lsti)
 	{
-		if (!insert_tri(grid, lsti->data, siz))
+		if (!insert(grid, lsti->data, siz))
 			return (0);
 		lsti = lsti->next;
 	}
@@ -102,6 +102,8 @@ int			flt_solve_iterative(t_lst tris)
 	t_lst	prm;
 	int		siz;
 
+	if (!tris)
+		return (0);
 	siz = ft_sqrtillu(ft_lstlen(tris) * 4);
 	while (siz < 16)
 	{
@@ -113,6 +115,7 @@ int			flt_solve_iterative(t_lst tris)
 				return (siz);
 			lsti = lsti->next;
 		}
+		ft_lstclr(prm, FT_LCLR_ITEM + FT_LCLR_LIST);
 		siz++;
 	}
 	return (0);

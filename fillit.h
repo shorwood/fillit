@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/05 11:34:04 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/09 21:59:09 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,11 +23,9 @@
 typedef struct		s_tri
 {
 	uint64_t		grid[4];
-	uint8_t			w;
-	uint8_t			h;
 	uint8_t			x;
 	uint8_t			y;
-	uint8_t			o;
+	uint8_t			h;
 }					t_tri;
 
 typedef struct		s_flt_parser
@@ -38,15 +36,20 @@ typedef struct		s_flt_parser
 	uint8_t			lnk;
 }					t_flt_parser;
 
+/*
+** Return a list of imported and parsed tetriminos from a text file.
+*/
+t_lst		flt_import(const char *file);
 
-t_tri		*flt_strtotri(const char *str);
-int			flt_prevalidate(const char *str);
-
+/*
+** Store tetriminos in the most compact grid and return the grid size.
+*/
+int			flt_solve(t_lst tris);
 int			flt_solve_iterative(t_lst tris);
-int			flt_solve_backtrack(t_lst tris);
 
-void		flt_print_tri(t_tri *tri);
-void		flt_print_grid(uint64_t grid[64], int siz);
-void 		flt_print_symbol(t_lst tris, int siz);
+/*
+** Output a grid with placed tetriminos.
+*/
+void 		flt_print(t_lst tris, int siz);
 
 #endif

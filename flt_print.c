@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   flt_print_symbol.c                               .::    .:/ .      .::   */
+/*   flt_print.c                                      .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:22:01 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/05 04:35:48 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/09 22:47:54 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "fillit.h"
 
-void flt_print_symbol(t_lst tris, int siz)
+void flt_print(t_lst tris, int siz)
 {
 	char 		*str;
 	size_t		len;
@@ -25,6 +25,8 @@ void flt_print_symbol(t_lst tris, int siz)
 	t_tri		*tri;
 	t_lsti		lsti;
 
+	if (!tris)
+		return ;
 	len = siz * siz + siz - 1;
 	str = ft_strnew(len);
 	ft_memset(str, '.', len);
@@ -51,7 +53,8 @@ void flt_print_symbol(t_lst tris, int siz)
 			{
 				if (tri->grid[y] >> (63 - x) & 1)
 				{
-					str[(x + tri->x) + (y + tri->y) * (siz + 1)] = sym;
+					if ((x + tri->x) < siz)
+						str[(x + tri->x) + (y + tri->y) * (siz + 1)] = sym;
 				}
 				x++;
 			}
@@ -60,7 +63,6 @@ void flt_print_symbol(t_lst tris, int siz)
 		sym++;
 		lsti = lsti->next;
 	}
-
-	ft_putstr(str);
+	ft_putendl(str);
 	free(str);
 }
