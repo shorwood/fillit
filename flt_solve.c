@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/09 23:02:27 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/09 23:09:08 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -76,11 +76,9 @@ static int	insert(uint64_t *grid, t_lsti lsti, int siz, int deep)
 		while (++tri->x < siz)
 		{
 
-				printf("Testing #%d at (x:%d, y:%d)\n", deep, tri->x, tri->y);
-				flt_print(tr, siz);
 			if (place(grid, tri))
 			{
-				if (!lsti->next || !tricmp(tri, (t_tri*)lsti->next->data) || insert(grid, lsti->next, siz, deep + 1))
+				if (!lsti->next || insert(grid, lsti->next, siz, deep + 1))
 					return (1);
 				else
 					unplace(grid, tri);
