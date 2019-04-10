@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/10 02:58:38 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/10 03:11:53 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,11 +23,7 @@ int main(int argc, char **argv)
 {
 	t_lst tris;
 
-	/* FOR DEBUG PURPOSES. PLEASE DO NOT FORGET TO DELETE */
-	argc = 2;
-	argv = 0;
-
-	if (argc != 2 || !(tris = flt_import("sample/01.txt")))//argv[1])))
+	if (!(tris = flt_import("sample/01.txt")) && (argc != 2 || !(tris = flt_import(argv[1]))))
 	{
 		ft_putendl("error");
 		return (0);

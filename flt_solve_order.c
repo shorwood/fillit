@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/10 02:58:21 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/10 03:43:45 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,21 +20,20 @@
 
 static int	place(__uint128_t *grid, t_tri *tri)
 {
-	__uint128_t tri_grid;
-	
-	tri_grid = tri->grid >> (tri->x + tri->y * 11);
-	if (*grid & tri_grid)
+	if (*grid & tri->grid >> (tri->x + tri->y * 11))
 		return (0);
-	*grid |= tri_grid;
+	*grid |= tri->grid >> (tri->x + tri->y * 11);
 	return (1);
 }
+
+/*
+** *****************************************************************************
+*/
 
 static void	unplace(__uint128_t *grid, t_tri *tri)
 {
 	*grid ^= tri->grid >> (tri->x + tri->y * 11);
 }
-
-static t_lst tr;
 
 /*
 ** *****************************************************************************
@@ -72,8 +71,6 @@ int			flt_solve(t_lst tris)
 	int			i;
 	int			siz;
 	__uint128_t	grid;
-
-	tr = tris;
 
 	if (!tris)
 		return (0);
