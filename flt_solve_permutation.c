@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   flt_solve_order.c                                .::    .:/ .      .::   */
+/*   flt_solve_permutation.c                          .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/10 07:32:34 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/10 07:22:34 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "libft.h"
 #include "fillit.h"
 
 /*
@@ -30,14 +31,6 @@ static int	place(__uint128_t *grid, t_tri *tri)
 ** *****************************************************************************
 */
 
-static void	unplace(__uint128_t *grid, t_tri *tri)
-{
-	*grid ^= tri->grid >> (tri->x + tri->y * 11);
-}
-
-/*
-** *****************************************************************************
-*/
 
 static int	insert(__uint128_t *grid, t_tri *tri, int siz)
 {
@@ -56,83 +49,57 @@ static int	insert(__uint128_t *grid, t_tri *tri, int siz)
 ** *****************************************************************************
 */
 
-int 		unique(t_lst lst, __uint128_t *grid)
+static int	pack(t_lst tris, int siz)
 {
-	t_lsti lsti;
+	t_lsti		lsti;
+	__uint128_t	grid;
+	int			i;
 
-	lsti = *lst;
+	i = 0;
+	grid = ~0;
+	while (i++ < siz)
+		grid = grid >> 11 | ft_bit128clamp((__uint128_t)~0, 128 - siz, 117);
+	lsti = *tris;
 	while (lsti)
 	{
-		if (*(__uint128_t*)(lsti->data) == *grid)
+		if (!insert(&grid, (t_tri*)lsti->data, siz))
 			return (0);
 		lsti = lsti->next;
 	}
-	ft_lstadd(lst, grid);
 	return (1);
 }
 
 /*
 ** *****************************************************************************
-*/
-
-static t_lst tr;
-static int	pack(__uint128_t *grid, t_lst tris, int siz)
-{
-	t_tri	*tri;
-	t_lst	out;
-	int 	len;
-	int		i;
-
-	out = ft_lstnew(0);
-	if ((len = ft_lstlen(tris)) < 1)
-		return (1);
-	i = 0;
-	while(1)
-	{
-		if (!(tri = ft_lstdel(tris, i)))
-			break;
-		if (unique(out, &(tri->grid)) && insert(grid, tri, siz))
-		{
-			if (pack(grid, tris, siz))
-			{
-				ft_lstclr(out, FT_LCLR_ITEM | FT_LCLR_LIST);
-				return (1);
-			}
-			else
-				unplace(grid, tri);
-		}
-		ft_lstins(tris, tri, i++);
-	}
-	ft_lstclr(out, FT_LCLR_ITEM | FT_LCLR_LIST);
-	return (0);
-}
-
-/*
+** This algorithm will try all possible orders / permutations of tetrimino and
+** stop as soon as it has found an order that fits into the grid. If it has
+** tried all permutations, it will increase the size of the grid and try again.
+** When the function exits, the tetriminos will have their 'x' and 'y'
+** coordinates set to the last position they were tested on.
 ** *****************************************************************************
 */
 
-
-int			flt_solve(t_lst tris)
+int			flt_solve_permutation(t_lst tris)
 {
-	int			i;
-	int			siz;
-	__uint128_t	grid;
-	t_lst 		tmp;
+	t_lsti	lsti;
+	t_lst	prm;
+	int		siz;
 
-	tmp = ft_lstcpy(tris);
-	tr = tmp;
 	if (!tris)
 		return (0);
-	siz = ft_sqrtillu(ft_lstlen(tmp) * 4);
-	while (siz < 11)
+	siz = ft_sqrtillu(ft_lstlen(tris) * 4);
+	while (siz < 16)
 	{
-		i = 0;
-		grid = ~0;
-		while (i++ < siz)
-			grid = grid >> 11 | ft_bit128clamp((__uint128_t)~0, 128 - siz, 117);
-		if (pack(&grid, tmp, siz))
-			break;
+		prm = ft_lstprm(tris);
+		lsti = *prm;
+		while (lsti)
+		{
+			if(pack((t_lst)lsti->data, siz))
+				return (siz);
+			lsti = lsti->next;
+		}
+		ft_lstclr(prm, FT_LCLR_ITEM | FT_LCLR_LIST);
 		siz++;
 	}
-	return (siz);
+	return (0);
 }

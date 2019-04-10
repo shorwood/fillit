@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:22:01 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/10 01:04:12 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/10 08:12:33 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "fillit.h"
 
-void flt_print(t_lst tris, int siz)
+void	flt_print(t_lst tris, int siz)
 {
 	char 		*str;
 	size_t		len;

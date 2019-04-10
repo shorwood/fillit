@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/10 02:29:24 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/10 08:06:50 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -49,7 +49,7 @@ static int		validate(const char *str)
 ** *****************************************************************************
 */
 
-t_tri	*parse(const char *str)
+static t_tri	*parse(const char *str)
 {
 	t_tri 		*tri;
 	uint16_t	grid;
@@ -95,9 +95,6 @@ t_lst		flt_import(const char *file)
 	fd = open(file, O_RDONLY);
 	while ((len = read(fd, str, 21)) > 0)
 		if (!validate(str) || !ft_lstpush(lst, parse(str)))
-		{
-			ft_lstclr(lst, FT_LCLR_ALL);
-			return (NULL);
-		}
+			return (lst);
 	return (lst);	
 }
