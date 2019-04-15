@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 11:18:40 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/15 12:59:29 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -43,6 +43,6 @@ int					flt_solve(t_lst tris);
 /*
 ** Output a grid of letters from a list of placed tetriminos.
 */
-void				flt_print(t_lst tris, int siz);
+int					flt_print(t_lst tris, int siz);
 
 #endif

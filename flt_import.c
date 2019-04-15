@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 11:11:05 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/15 13:01:43 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -97,7 +97,8 @@ t_lst			flt_import(const char *file)
 			|| !ft_lstpush(lst, tri))
 		{
 			ft_lstclr(lst, FT_LCLR_ALL);
-			return (NULL);
+			break ;
 		}
-	return (lst);
+	close(fd);
+	return (*lst ? lst : NULL);
 }

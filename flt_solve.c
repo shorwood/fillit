@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 11:18:04 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/15 13:02:13 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -54,18 +54,13 @@ static int	insert(uint16_t *grid, t_tri *tri, int siz)
 ** *****************************************************************************
 */
 
-static int	unique(t_lst lst, uint16_t *grid)
+static int	unique(uint64_t *old, t_tri *tri)
 {
-	t_lsti	lsti;
-
-	lsti = *lst;
-	while (lsti)
-	{
-		if (*(uint64_t*)((t_tri*)(lsti->data)) == *(uint64_t*)grid)
+	while (*old)
+		if (*old++ == *(uint64_t*)tri->grid)
 			return (0);
-		lsti = lsti->next;
-	}
-	ft_lstadd(lst, grid);
+	*old = *(uint64_t*)tri->grid;
+	*++old = 0;
 	return (1);
 }
 
@@ -75,29 +70,26 @@ static int	unique(t_lst lst, uint16_t *grid)
 
 static int	pack(uint16_t *grid, t_lst tris, int siz)
 {
-	t_tri		*tri;
-	t_lst		uni;
+	t_lsti		lsti;
+	uint64_t	old[24];
 	int			i;
 
-	if (!*tris)
-		return (1);
-	uni = ft_lstnew(0);
+	old[0] = 0;
+	if (ft_lstnull(tris))
+		return (-1);
 	i = 0;
-	while (1)
+	while ((lsti = ft_lstidel(tris, i)))
 	{
-		if (!(tri = ft_lstdel(tris, i)))
-			break ;
-		if (unique(uni, tri->grid)
-			&& insert(grid, tri, siz)
+		if (unique(old, lsti->data)
+			&& insert(grid, (t_tri*)lsti->data, siz)
 			&& (pack(grid, tris, siz)
-			|| place(grid, tri, 1)))
+			|| place(grid, (t_tri*)lsti->data, 1)))
 		{
-			ft_lstclr(uni, FT_LCLR_ITEM | FT_LCLR_LIST);
+			ft_lstiins(tris, lsti, i);
 			return (1);
 		}
-		ft_lstins(tris, tri, i++);
+		ft_lstiins(tris, lsti, i++);
 	}
-	ft_lstclr(uni, FT_LCLR_ITEM | FT_LCLR_LIST);
 	return (0);
 }
 
@@ -110,23 +102,19 @@ int			flt_solve(t_lst tris)
 	int			i;
 	int			siz;
 	uint16_t	grid[16];
-	t_lst		buf;
 
 	if (!tris)
 		return (0);
-	if (!(buf = ft_lstcpy(tris)))
-		return (0);
-	siz = ft_sqrtillu(ft_lstlen(buf) * 4);
+	siz = ft_sqrtillu(ft_lstlen(tris) * 4);
 	while (siz < 16)
 	{
 		i = 0;
 		while (i < siz)
 			grid[i++] = (uint16_t)~0 >> siz;
 		grid[i] = (uint16_t)~0;
-		if (pack(grid, buf, siz))
+		if (pack(grid, tris, siz))
 			break ;
 		siz++;
 	}
-	ft_lstclr(buf, FT_LCLR_ITEM | FT_LCLR_LIST);
 	return (siz);
 }

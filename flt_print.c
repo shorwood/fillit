@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:22:01 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 11:16:07 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/15 13:01:18 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -60,14 +60,14 @@ static void	layer(char *str, t_tri *tri, int siz, char c)
 ** *****************************************************************************
 */
 
-void		flt_print(t_lst tris, int siz)
+int			flt_print(t_lst tris, int siz)
 {
 	t_lsti	tri;
 	char	*str;
 	char	c;
 
 	if (ft_lstnull(tris) || !(str = init(siz)))
-		return ;
+		return (0);
 	c = 'A';
 	tri = *tris;
 	while (tri)
@@ -77,4 +77,5 @@ void		flt_print(t_lst tris, int siz)
 	}
 	ft_putendl(str);
 	free(str);
+	return (1);
 }
