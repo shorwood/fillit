@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 13:02:13 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/15 13:21:03 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -76,7 +76,7 @@ static int	pack(uint16_t *grid, t_lst tris, int siz)
 
 	old[0] = 0;
 	if (ft_lstnull(tris))
-		return (-1);
+		return (1);
 	i = 0;
 	while ((lsti = ft_lstidel(tris, i)))
 	{
