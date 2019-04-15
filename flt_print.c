@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:22:01 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/10 08:12:33 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/15 11:16:07 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -14,54 +14,66 @@
 #include "libft.h"
 #include "fillit.h"
 
-void	flt_print(t_lst tris, int siz)
+/*
+** *****************************************************************************
+*/
+
+static char	*init(int siz)
 {
-	char 		*str;
-	size_t		len;
-	int 		x;
-	int 		y;
-	int			i;
-	char		sym;
-	t_tri		*tri;
-	t_lsti		lsti;
+	char	*str;
+	size_t	len;
+	int		i;
 
-	if (!tris)
-		return ;
 	len = siz * siz + siz - 1;
-	str = ft_strnew(len);
+	if (!(str = ft_strnew(len)))
+		return (NULL);
 	ft_memset(str, '.', len);
-
 	i = siz;
-	while(i < siz * siz)
+	while (i < siz * siz)
 	{
 		str[i] = '\n';
 		i += siz + 1;
 	}
+	return (str);
+}
 
-	str[len] = '\0';
+/*
+** *****************************************************************************
+*/
 
-	sym = 'A';
-	lsti = *tris;
-	while (lsti)
+static void	layer(char *str, t_tri *tri, int siz, char c)
+{
+	int x;
+	int y;
+
+	y = -1;
+	while (++y < 4)
 	{
-		tri = lsti->data;
-		y = 0;
-		while (y < 4)
-		{
-			x = 0;
-			while (x < 4)
-			{
-				if ((tri->grid >> (127 - x - y * 11) & 1))
-				{
-					if ((x + tri->x) < siz)
-						str[(x + tri->x) + (y + tri->y) * (siz + 1)] = sym;
-				}
-				x++;
-			}
-			y++;
-		}
-		sym++;
-		lsti = lsti->next;
+		x = -1;
+		while (++x < 4)
+			if (tri->grid[y] >> (15 - x) & 1)
+				str[(x + tri->x) + (y + tri->y) * (siz + 1)] = c;
+	}
+}
+
+/*
+** *****************************************************************************
+*/
+
+void		flt_print(t_lst tris, int siz)
+{
+	t_lsti	tri;
+	char	*str;
+	char	c;
+
+	if (ft_lstnull(tris) || !(str = init(siz)))
+		return ;
+	c = 'A';
+	tri = *tris;
+	while (tri)
+	{
+		layer(str, tri->data, siz, c++);
+		tri = tri->next;
 	}
 	ft_putendl(str);
 	free(str);

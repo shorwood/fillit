@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/10 08:06:50 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/15 11:11:05 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,7 +24,7 @@ static int		validate(const char *str)
 {
 	t_flt_parser n;
 
-	n = (t_flt_parser){0, 0 ,0, 0};
+	n = (t_flt_parser){0, 0, 0, 0};
 	while (*str)
 	{
 		if (*str == '#')
@@ -51,10 +51,10 @@ static int		validate(const char *str)
 
 static t_tri	*parse(const char *str)
 {
-	t_tri 		*tri;
+	t_tri		*tri;
 	uint16_t	grid;
 
-	if(!(tri = (t_tri*)malloc(sizeof(t_tri))))
+	if (!(tri = (t_tri*)malloc(sizeof(t_tri))))
 		return (NULL);
 	grid = 0;
 	while (*str)
@@ -69,12 +69,10 @@ static t_tri	*parse(const char *str)
 		grid <<= 4;
 	while (!(grid & 0x8888))
 		grid <<= 1;
-	tri->grid = (__uint128_t)ft_bit16clamp(grid, 16, 12) << 112
-		| (__uint128_t)ft_bit16clamp(grid, 12, 8) << 105
-		| (__uint128_t)ft_bit16clamp(grid, 8, 4) << 98
-		| (__uint128_t)ft_bit16clamp(grid, 4, 0) << 91;
-	tri->x = UINT8_MAX;
-	tri->y = UINT8_MAX;
+	tri->grid[0] = ft_bit16clamp(grid, 16, 12);
+	tri->grid[1] = ft_bit16clamp(grid, 12, 8) << 4;
+	tri->grid[2] = ft_bit16clamp(grid, 8, 4) << 8;
+	tri->grid[3] = ft_bit16clamp(grid, 4, 0) << 12;
 	return (tri);
 }
 
@@ -82,19 +80,24 @@ static t_tri	*parse(const char *str)
 ** *****************************************************************************
 */
 
-t_lst		flt_import(const char *file)
+t_lst			flt_import(const char *file)
 {
 	int		fd;
-	t_lst	lst;
 	char	str[22];
-	size_t	len;
+	t_lst	lst;
+	t_tri	*tri;
 
-	str[21] = '\0';
 	if (!(lst = ft_lstnew(0)))
 		return (NULL);
+	ft_memset(str, '\0', 22 * sizeof(char));
 	fd = open(file, O_RDONLY);
-	while ((len = read(fd, str, 21)) > 0)
-		if (!validate(str) || !ft_lstpush(lst, parse(str)))
-			return (lst);
-	return (lst);	
+	while (read(fd, str, 21) != 0)
+		if (!validate(str)
+			|| !(tri = parse(str))
+			|| !ft_lstpush(lst, tri))
+		{
+			ft_lstclr(lst, FT_LCLR_ALL);
+			return (NULL);
+		}
+	return (lst);
 }

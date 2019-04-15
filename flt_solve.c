@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   flt_solve_order.c                                .::    .:/ .      .::   */
+/*   flt_solve.c                                      .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/10 07:32:34 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/15 11:18:04 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,35 +18,33 @@
 ** *****************************************************************************
 */
 
-static int	place(__uint128_t *grid, t_tri *tri)
+static int	place(uint16_t *grid, t_tri *tri, int unplace)
 {
-	if (*grid & tri->grid >> (tri->x + tri->y * 11))
-		return (0);
-	*grid |= tri->grid >> (tri->x + tri->y * 11);
-	return (1);
+	if (!unplace)
+		if (grid[tri->y] & tri->grid[0] >> tri->x
+			|| grid[tri->y + 1] & tri->grid[1] >> tri->x
+			|| grid[tri->y + 2] & tri->grid[2] >> tri->x
+			|| grid[tri->y + 3] & tri->grid[3] >> tri->x)
+			return (0);
+	grid[tri->y] ^= tri->grid[0] >> tri->x;
+	grid[tri->y + 1] ^= tri->grid[1] >> tri->x;
+	grid[tri->y + 2] ^= tri->grid[2] >> tri->x;
+	grid[tri->y + 3] ^= tri->grid[3] >> tri->x;
+	return (!unplace);
 }
 
 /*
 ** *****************************************************************************
 */
 
-static void	unplace(__uint128_t *grid, t_tri *tri)
-{
-	*grid ^= tri->grid >> (tri->x + tri->y * 11);
-}
-
-/*
-** *****************************************************************************
-*/
-
-static int	insert(__uint128_t *grid, t_tri *tri, int siz)
+static int	insert(uint16_t *grid, t_tri *tri, int siz)
 {
 	tri->y = -1;
 	while (++tri->y < siz)
 	{
 		tri->x = -1;
 		while (++tri->x < siz)
-			if (place(grid, tri))
+			if (place(grid, tri, 0))
 				return (1);
 	}
 	return (0);
@@ -56,14 +54,14 @@ static int	insert(__uint128_t *grid, t_tri *tri, int siz)
 ** *****************************************************************************
 */
 
-int 		unique(t_lst lst, __uint128_t *grid)
+static int	unique(t_lst lst, uint16_t *grid)
 {
-	t_lsti lsti;
+	t_lsti	lsti;
 
 	lsti = *lst;
 	while (lsti)
 	{
-		if (*(__uint128_t*)(lsti->data) == *grid)
+		if (*(uint64_t*)((t_tri*)(lsti->data)) == *(uint64_t*)grid)
 			return (0);
 		lsti = lsti->next;
 	}
@@ -75,35 +73,31 @@ int 		unique(t_lst lst, __uint128_t *grid)
 ** *****************************************************************************
 */
 
-static t_lst tr;
-static int	pack(__uint128_t *grid, t_lst tris, int siz)
+static int	pack(uint16_t *grid, t_lst tris, int siz)
 {
-	t_tri	*tri;
-	t_lst	out;
-	int 	len;
-	int		i;
+	t_tri		*tri;
+	t_lst		uni;
+	int			i;
 
-	out = ft_lstnew(0);
-	if ((len = ft_lstlen(tris)) < 1)
+	if (!*tris)
 		return (1);
+	uni = ft_lstnew(0);
 	i = 0;
-	while(1)
+	while (1)
 	{
 		if (!(tri = ft_lstdel(tris, i)))
-			break;
-		if (unique(out, &(tri->grid)) && insert(grid, tri, siz))
+			break ;
+		if (unique(uni, tri->grid)
+			&& insert(grid, tri, siz)
+			&& (pack(grid, tris, siz)
+			|| place(grid, tri, 1)))
 		{
-			if (pack(grid, tris, siz))
-			{
-				ft_lstclr(out, FT_LCLR_ITEM | FT_LCLR_LIST);
-				return (1);
-			}
-			else
-				unplace(grid, tri);
+			ft_lstclr(uni, FT_LCLR_ITEM | FT_LCLR_LIST);
+			return (1);
 		}
 		ft_lstins(tris, tri, i++);
 	}
-	ft_lstclr(out, FT_LCLR_ITEM | FT_LCLR_LIST);
+	ft_lstclr(uni, FT_LCLR_ITEM | FT_LCLR_LIST);
 	return (0);
 }
 
@@ -111,28 +105,28 @@ static int	pack(__uint128_t *grid, t_lst tris, int siz)
 ** *****************************************************************************
 */
 
-
 int			flt_solve(t_lst tris)
 {
 	int			i;
 	int			siz;
-	__uint128_t	grid;
-	t_lst 		tmp;
+	uint16_t	grid[16];
+	t_lst		buf;
 
-	tmp = ft_lstcpy(tris);
-	tr = tmp;
 	if (!tris)
 		return (0);
-	siz = ft_sqrtillu(ft_lstlen(tmp) * 4);
-	while (siz < 11)
+	if (!(buf = ft_lstcpy(tris)))
+		return (0);
+	siz = ft_sqrtillu(ft_lstlen(buf) * 4);
+	while (siz < 16)
 	{
 		i = 0;
-		grid = ~0;
-		while (i++ < siz)
-			grid = grid >> 11 | ft_bit128clamp((__uint128_t)~0, 128 - siz, 117);
-		if (pack(&grid, tmp, siz))
-			break;
+		while (i < siz)
+			grid[i++] = (uint16_t)~0 >> siz;
+		grid[i] = (uint16_t)~0;
+		if (pack(grid, buf, siz))
+			break ;
 		siz++;
 	}
+	ft_lstclr(buf, FT_LCLR_ITEM | FT_LCLR_LIST);
 	return (siz);
 }
