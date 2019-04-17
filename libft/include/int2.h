@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   libft.h                                          .::    .:/ .      .::   */
+/*   int2.h                                           .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2018/07/21 19:23:29 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/17 16:16:41 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Created: 2019/04/17 15:47:30 by shorwood     #+#   ##    ##    #+#       */
+/*   Updated: 2019/04/17 15:48:25 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#ifndef _LIBFT_H
-# define _LIBFT_H
-# include <stdlib.h>
-# include "binary.h"
-# include "ctype.h"
-# include "int2.h"
-# include "io.h"
-# include "list.h"
-# include "math.h"
-# include "string.h"
+#ifndef _LIBFT_INT2_H
+# define _LIBFT_INT2_H
 
-char				*ft_itoa(int x);
-char				*ft_astrcat(const char **arr);
+typedef struct	s_int2
+{
+	int			x;
+	int			y;
+}				t_int2;
+
 #endif
