@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/17 16:16:25 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/17 16:26:17 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -97,7 +97,7 @@ static int	pack(uint16_t *grid, t_lst tris, int siz)
 				if (pack(grid, tris, siz)
 				|| place(grid, (t_tri*)lsti->data, 0))
 					return (1);
-				else if (siz > 7)
+				else if (siz > 5)
 					break ;
 		}
 		ft_lstiins(tris, lsti, i++);
