@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 12:59:29 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/17 15:57:22 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,16 +18,16 @@
 typedef struct		s_tri
 {
 	uint_fast16_t	grid[4];
-	uint_fast8_t	x;
-	uint_fast8_t	y;
+	int				x;
+	int				y;
 }					t_tri;
 
 typedef struct		s_flt_parser
 {
-	uint_fast8_t	sym;
-	uint_fast8_t	hsh;
-	uint_fast8_t	dot;
-	uint_fast8_t	lnk;
+	int				nln;
+	int				hsh;
+	int				dot;
+	int				lnk;
 }					t_flt_parser;
 
 /*

@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 13:01:43 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/17 15:40:51 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -22,27 +22,31 @@
 
 static int		validate(const char *str)
 {
-	t_flt_parser n;
+	int				i;
+	t_flt_parser	n;
 
+	i = 0;
+	if (str[4] != '\n' || str[9] != '\n' || str[14] != '\n' || str[19] != '\n')
+		return (0);
 	n = (t_flt_parser){0, 0, 0, 0};
-	while (*str)
+	while (str[i])
 	{
-		if (*str == '#')
+		if (str[i] == '#')
 		{
-			n.sym = n.dot + n.hsh;
-			n.lnk += (n.sym > 3 && *(str - 5) == '#') +
-					(n.sym > 0 && *(str - 1) == '#') +
-					(n.sym < 14 && *(str + 1) == '#') +
-					(n.sym < 12 && *(str + 5) == '#');
+			n.lnk += (i > 4 && str[i - 5] == '#') + (i > 0 && str[i - 1] == '#')
+					+ (str[i + 1] == '#') + (i < 15 && str[i + 5] == '#');
 			n.hsh++;
 		}
-		else if (*str == '.')
+		else if (str[i] == '.')
 			n.dot++;
-		else if (*str != '\n')
+		else if (str[i] == '\n')
+			n.nln++;
+		else
 			return (0);
-		str++;
+		i++;
 	}
-	return (n.dot == 12 && n.hsh == 4 && (n.lnk == 8 || n.lnk == 6));
+	return (n.dot == 12 && (n.nln == 5 || n.nln == 4)
+		&& n.hsh == 4 && (n.lnk == 8 || n.lnk == 6));
 }
 
 /*
@@ -80,25 +84,49 @@ static t_tri	*parse(const char *str)
 ** *****************************************************************************
 */
 
+static int		convert(t_lst lst)
+{
+	t_lsti	lsti;
+	char	*buf;
+
+	lsti = *lst;
+	while (lsti)
+	{
+		if ((buf = lsti->data)
+			&& !!lsti->next != (ft_strlen(buf) == 20)
+			&& validate(buf)
+			&& (lsti->data = parse(buf)))
+		{
+			free(buf);
+			lsti = lsti->next;
+		}
+		else
+			return (0);
+	}
+	return (1);
+}
+
+/*
+** *****************************************************************************
+*/
+
 t_lst			flt_import(const char *file)
 {
 	int		fd;
-	char	str[22];
+	char	*buf;
 	t_lst	lst;
-	t_tri	*tri;
+	size_t	len;
 
-	if (!(lst = ft_lstnew(0)))
+	if (!(lst = ft_lstnew(0))
+		|| !(buf = ft_strnew(21))
+		|| (fd = open(file, O_RDONLY)) < 0)
 		return (NULL);
-	ft_memset(str, '\0', 22 * sizeof(char));
-	fd = open(file, O_RDONLY);
-	while (read(fd, str, 21) != 0)
-		if (!validate(str)
-			|| !(tri = parse(str))
-			|| !ft_lstpush(lst, tri))
-		{
-			ft_lstclr(lst, FT_LCLR_ALL);
-			break ;
-		}
+	while ((len = read(fd, buf, 21)) > 0)
+		ft_lstpush(lst, ft_strndup(buf, len));
 	close(fd);
-	return (*lst ? lst : NULL);
+	if (!convert(lst))
+		ft_lstclr(lst, FT_LCLR_ALL);
+	else
+		return (lst);
+	return (NULL);
 }

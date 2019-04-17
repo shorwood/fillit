@@ -6,7 +6,7 @@
 #    By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/07/16 12:26:44 by shorwood     #+#   ##    ##    #+#        #
-#    Updated: 2019/04/17 10:39:52 by shorwood    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/04/17 15:57:42 by shorwood    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -23,16 +23,14 @@ INC	= fillit.h
 
 # **************************************************************************** #
 
-all: libft $(NAME)
+all: $(NAME)
 
 $(NAME): $(SRC)
-	@$(CC) $^ -o $@ $(LDFLAGS) $(IFLAGS) $(CFLAGS)
+	@make -C libft
+	@$(CC) $^ -o $@ $(LDFLAGS) $(IFLAGS) $(CFLAGS) -O3
 	@echo "\r\033[K• Binary '$(notdir $@)' compiled"
 
 # **************************************************************************** #
-
-libft:
-	@make -C libft
 
 clean:
 	-@rm *.o 2> /dev/null || true
