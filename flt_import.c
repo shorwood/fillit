@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/17 15:40:51 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/17 16:30:11 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -89,6 +89,8 @@ static int		convert(t_lst lst)
 	t_lsti	lsti;
 	char	*buf;
 
+	if (ft_lstnull(lst))
+		return (0);
 	lsti = *lst;
 	while (lsti)
 	{
