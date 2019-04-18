@@ -6,14 +6,13 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/17 16:30:11 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/18 19:27:42 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <unistd.h>
-#include "libft.h"
 #include "fillit.h"
 
 /*

@@ -6,12 +6,11 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 12:47:50 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/18 19:25:14 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "fillit.h"
 
 int		main(int argc, char **argv)
