@@ -6,7 +6,7 @@
 #    By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/07/16 12:26:44 by shorwood     #+#   ##    ##    #+#        #
-#    Updated: 2019/04/18 19:25:30 by shorwood    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/04/19 17:06:03 by shorwood    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -32,7 +32,7 @@ all: $(NAME)
 
 $(NAME): $(SRC)
 	@make -C libft
-	@$(CC) $^ -o $@ $(LDFLAGS) $(IFLAGS) $(CFLAGS) -O3
+	@$(CC) $^ -o $@ $(LDFLAGS) $(IFLAGS) $(CFLAGS)
 	@echo "\r\033[K• Binary '$(notdir $@)' compiled"
 
 # **************************************************************************** #
