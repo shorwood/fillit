@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/18 19:25:10 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/29 18:15:56 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,9 +16,11 @@
 
 /*
 ** *****************************************************************************
+** Place or unplace the tetrimino grid on the input grid.
+** *****************************************************************************
 */
 
-static int	place(uint16_t *grid, t_tri *tri, int val)
+static int	set(uint16_t *grid, t_tri *tri, int val)
 {
 	if (val)
 		if (grid[tri->y] & tri->grid[0] >> tri->x
@@ -35,6 +37,9 @@ static int	place(uint16_t *grid, t_tri *tri, int val)
 
 /*
 ** *****************************************************************************
+** Try to insert a tetrimino into a grid by finding the valid first position.
+** If no position is found, 0 is returned.
+** *****************************************************************************
 */
 
 static int	insert(uint16_t *grid, t_tri *tri, int siz, t_int2 *off)
@@ -46,7 +51,7 @@ static int	insert(uint16_t *grid, t_tri *tri, int siz, t_int2 *off)
 		while (tri->x < siz)
 		{
 			off->x++;
-			if (place(grid, tri, 1))
+			if (set(grid, tri, 1))
 				return (1);
 			tri->x++;
 		}
@@ -59,6 +64,9 @@ static int	insert(uint16_t *grid, t_tri *tri, int siz, t_int2 *off)
 }
 
 /*
+** *****************************************************************************
+** Tell if a tetrimino figure has already been used. If not already used, the
+** function will register the figure for future use.
 ** *****************************************************************************
 */
 
@@ -73,6 +81,9 @@ static int	unique(uint64_t *old, t_tri *tri)
 }
 
 /*
+** *****************************************************************************
+** Will try to pack as many tetriminos into a fixed size grid. If it hasn't
+** found
 ** *****************************************************************************
 */
 
@@ -94,9 +105,9 @@ static int	pack(uint16_t *grid, t_lst tris, int siz)
 		{
 			while (insert(grid, (t_tri*)lsti->data, siz, &off))
 				if (pack(grid, tris, siz)
-				|| place(grid, (t_tri*)lsti->data, 0))
+				|| set(grid, (t_tri*)lsti->data, 0))
 					return (1);
-				else if (siz > 5)
+				else if (siz > 7)
 					break ;
 		}
 		ft_lstiins(tris, lsti, i++);
@@ -105,6 +116,9 @@ static int	pack(uint16_t *grid, t_lst tris, int siz)
 }
 
 /*
+** *****************************************************************************
+** Will try to pack as many tetriminos into a grid. Will increase size of the
+** grid if necessary.
 ** *****************************************************************************
 */
 

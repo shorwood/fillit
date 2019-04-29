@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/18 19:27:42 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/29 17:58:02 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,6 +16,11 @@
 #include "fillit.h"
 
 /*
+** *****************************************************************************
+** This function will take a single tetrimino's string at a time and make sure
+** it is valid. It will count the number of square, the number of new lines and
+** the number of voids. We use the structure 't_flt_parse' to get around the
+** maximum lines limitation of the 42 norm. Return 0 if the tetrimino is invalid
 ** *****************************************************************************
 */
 
@@ -50,6 +55,9 @@ static int		validate(const char *str)
 
 /*
 ** *****************************************************************************
+** This function will take a string and output a tetrimino as a bitfield.
+** Output tetrimino will be align at the top-most, left-most position.
+** *****************************************************************************
 */
 
 static t_tri	*parse(const char *str)
@@ -81,6 +89,10 @@ static t_tri	*parse(const char *str)
 
 /*
 ** *****************************************************************************
+** Take a list of string and transform them in a list of tetriminos. If any
+** tetrinino is invalid, the function returns 0 and the program will output
+** 'error\n'
+** *****************************************************************************
 */
 
 static int		convert(t_lst lst)
@@ -108,6 +120,11 @@ static int		convert(t_lst lst)
 }
 
 /*
+** *****************************************************************************
+** This function will take a file path as the input string. This file will be
+** Opened and all tetriminos will be imported as a structure in a list.
+** If all goes well, the list will of tetriminos will be returned; If not,
+** everything is freed and the 'NULL' is returned.
 ** *****************************************************************************
 */
 

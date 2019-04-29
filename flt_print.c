@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:22:01 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/18 19:25:08 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/29 18:02:18 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -14,6 +14,9 @@
 #include "fillit.h"
 
 /*
+** *****************************************************************************
+** Initialize and return the output string by placing the newlines and the
+** empty squares.
 ** *****************************************************************************
 */
 
@@ -38,6 +41,9 @@ static char	*init(int siz)
 
 /*
 ** *****************************************************************************
+** Write the 'c' character at the input tetrimino grid string position.
+** Simply said, layers the tetrimino onto the string.
+** *****************************************************************************
 */
 
 static void	layer(char *str, t_tri *tri, int siz, char c)
@@ -56,6 +62,9 @@ static void	layer(char *str, t_tri *tri, int siz, char c)
 }
 
 /*
+** *****************************************************************************
+** Output the list of placed tetriminos on a grid like pattern. Any error will
+** make this function output a 0.
 ** *****************************************************************************
 */
 
