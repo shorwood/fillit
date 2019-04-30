@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/05 04:13:14 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/29 18:44:04 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/30 03:07:14 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,7 +20,7 @@
 ** *****************************************************************************
 */
 
-static int	set(uint16_t *grid, t_tri *tri, int val)
+static int	set(uint16_t *grid, t_flt_tri *tri, int val)
 {
 	if (val)
 		if (grid[tri->y] & tri->grid[0] >> tri->x
@@ -42,7 +42,7 @@ static int	set(uint16_t *grid, t_tri *tri, int val)
 ** *****************************************************************************
 */
 
-static int	insert(uint16_t *grid, t_tri *tri, int siz, t_int2 *off)
+static int	insert(uint16_t *grid, t_flt_tri *tri, int siz, t_int2 *off)
 {
 	tri->y = off->y;
 	tri->x = off->x;
@@ -70,7 +70,7 @@ static int	insert(uint16_t *grid, t_tri *tri, int siz, t_int2 *off)
 ** *****************************************************************************
 */
 
-static int	unique(uint64_t *old, t_tri *tri)
+static int	unique(uint64_t *old, t_flt_tri *tri)
 {
 	while (*old)
 		if (*old++ == *(uint64_t*)tri->grid)
@@ -103,9 +103,9 @@ static int	pack(uint16_t *grid, t_lst tris, int siz)
 		off = (t_int2){0, 0};
 		if (unique(old, lsti->data))
 		{
-			while (insert(grid, (t_tri*)lsti->data, siz, &off))
+			while (insert(grid, (t_flt_tri*)lsti->data, siz, &off))
 				if (pack(grid, tris, siz)
-				|| set(grid, (t_tri*)lsti->data, 0))
+				|| set(grid, (t_flt_tri*)lsti->data, 0))
 					return (1);
 				else if (siz > 6)
 					break ;

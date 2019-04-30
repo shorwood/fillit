@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:19:25 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/29 17:58:02 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/30 03:06:50 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,7 +24,7 @@
 ** *****************************************************************************
 */
 
-static int		validate(const char *str)
+static int			validate(const char *str)
 {
 	int				i;
 	t_flt_parser	n;
@@ -60,12 +60,12 @@ static int		validate(const char *str)
 ** *****************************************************************************
 */
 
-static t_tri	*parse(const char *str)
+static t_flt_tri	*parse(const char *str)
 {
-	t_tri		*tri;
+	t_flt_tri		*tri;
 	uint16_t	grid;
 
-	if (!(tri = (t_tri*)malloc(sizeof(t_tri))))
+	if (!(tri = (t_flt_tri*)malloc(sizeof(t_flt_tri))))
 		return (NULL);
 	grid = 0;
 	while (*str)
@@ -95,7 +95,7 @@ static t_tri	*parse(const char *str)
 ** *****************************************************************************
 */
 
-static int		convert(t_lst lst)
+static int			convert(t_lst lst)
 {
 	t_lsti	lsti;
 	char	*buf;
@@ -128,7 +128,7 @@ static int		convert(t_lst lst)
 ** *****************************************************************************
 */
 
-t_lst			flt_import(const char *file)
+t_lst				flt_import(const char *file)
 {
 	int		fd;
 	char	*buf;

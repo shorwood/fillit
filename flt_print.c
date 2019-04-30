@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/15 00:22:01 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/29 18:02:18 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/30 03:06:56 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -46,7 +46,7 @@ static char	*init(int siz)
 ** *****************************************************************************
 */
 
-static void	layer(char *str, t_tri *tri, int siz, char c)
+static void	layer(char *str, t_flt_tri *tri, int siz, char c)
 {
 	int x;
 	int y;

@@ -6,7 +6,7 @@
 /*   By: shorwood <shorwood@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/03 22:35:33 by shorwood     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/17 15:57:22 by shorwood    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/30 03:06:22 by shorwood    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,12 +15,12 @@
 # define _FILLIT_H
 # include "libft.h"
 
-typedef struct		s_tri
+typedef struct		s_flt_tri
 {
 	uint_fast16_t	grid[4];
 	int				x;
 	int				y;
-}					t_tri;
+}					t_flt_tri;
 
 typedef struct		s_flt_parser
 {
