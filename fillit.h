@@ -13,7 +13,7 @@
 
 #ifndef _FILLIT_H
 # define _FILLIT_H
-# include "libft.h"
+# include "libft/include/libft.h"
 
 typedef struct		s_flt_tri
 {
